@@ -58,6 +58,5 @@ router.get('/summary', protect,  getFinanceSummary);
 router.get('/download/excel', protect, downloadFinanceExcel);
 
 
-// router.get('/exchange-rates', protect, getLiveExchangeRates); // Assuming you have authMiddleware
 module.exports = router;
 
