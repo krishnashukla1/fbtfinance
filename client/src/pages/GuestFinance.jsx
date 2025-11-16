@@ -96,32 +96,69 @@ const GuestFinance = () => {
   };
 
   // Fetch data
-  const fetchData = async () => {
-    if (filterType === 'dateRange' && !validateDateRange()) return;
-    setIsLoading(true);
-    try {
-      const query = filterType === 'dateRange'
-        ? `startDate=${startDate}&endDate=${endDate}&currency=${selectedCurrency}`
-        : `month=${month}&year=${year}&currency=${selectedCurrency}`;
-      const [summaryRes, incomesRes, expensesRes] = await Promise.all([
-        api.get(`/finance/summary?${query}`),
-        api.get(`/finance/incomes?${query}`),
-        api.get(`/finance/expenses?${query}`),
-      ]);
-      setSummary(summaryRes.data);
-      setIncomes(incomesRes.data.incomes || []);
-      setExpenses(expensesRes.data.expenses || []);
-    } catch (err) {
-      console.error('Error fetching data:', err);
-      setError(err.response?.data?.message || 'Failed to fetch financial data.');
-      setTimeout(() => setError(''), 3000);
-      setIncomes([]);
-      setExpenses([]);
-      setSummary(null);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  // const fetchData = async () => {
+  //   if (filterType === 'dateRange' && !validateDateRange()) return;
+  //   setIsLoading(true);
+  //   try {
+  //     const query = filterType === 'dateRange'
+  //       ? `startDate=${startDate}&endDate=${endDate}&currency=${selectedCurrency}`
+  //       : `month=${month}&year=${year}&currency=${selectedCurrency}`;
+  //     const [summaryRes, incomesRes, expensesRes] = await Promise.all([
+  //       api.get(`/finance/summary?${query}`),
+  //       api.get(`/finance/incomes?${query}`),
+  //       api.get(`/finance/expenses?${query}`),
+  //     ]);
+  //     setSummary(summaryRes.data);
+  //     setIncomes(incomesRes.data.incomes || []);
+  //     setExpenses(expensesRes.data.expenses || []);
+  //   } catch (err) {
+  //     console.error('Error fetching data:', err);
+  //     setError(err.response?.data?.message || 'Failed to fetch financial data.');
+  //     setTimeout(() => setError(''), 3000);
+  //     setIncomes([]);
+  //     setExpenses([]);
+  //     setSummary(null);
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // };
+
+
+  // Fetch data
+const fetchData = async () => {
+  if (filterType === 'dateRange' && !validateDateRange()) return;
+  setIsLoading(true);
+  try {
+    // Different query parameters for summary vs incomes/expenses
+    const summaryQuery = filterType === 'dateRange'
+      ? `startDate=${startDate}&endDate=${endDate}&currency=${selectedCurrency}`
+      : `month=${month}&year=${year}&currency=${selectedCurrency}`;
+
+    const incomeExpenseQuery = filterType === 'dateRange'
+      ? `startDate=${startDate}&endDate=${endDate}`
+      : `month=${month}&year=${year}`;
+
+    const [summaryRes, incomesRes, expensesRes] = await Promise.all([
+      api.get(`/finance/summary?${summaryQuery}`),
+      api.get(`/finance/incomes?${incomeExpenseQuery}`),
+      api.get(`/finance/expenses?${incomeExpenseQuery}`),
+    ]);
+    
+    setSummary(summaryRes.data);
+    setIncomes(incomesRes.data.incomes || []);
+    setExpenses(expensesRes.data.expenses || []);
+  } catch (err) {
+    console.error('Error fetching data:', err);
+    setError(err.response?.data?.message || 'Failed to fetch financial data.');
+    setTimeout(() => setError(''), 3000);
+    setIncomes([]);
+    setExpenses([]);
+    setSummary(null);
+  } finally {
+    setIsLoading(false);
+  }
+};
+
 
   useEffect(() => {
     fetchData();

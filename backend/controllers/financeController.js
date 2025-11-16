@@ -561,13 +561,48 @@ const addExpense = async (req, res) => {
 };
 
 // Get All Incomes (with filters)
+// const getIncomes = async (req, res) => {
+//   try {
+//     const { month, year, type, category } = req.query;
+
+//     let filter = {};
+
+//     if (month && year) {
+//       const start = new Date(year, month - 1, 1);
+//       const end = new Date(year, month, 0, 23, 59, 59);
+//       filter.date = { $gte: start, $lte: end };
+//     }
+
+//     if (type) filter.type = type;
+//     if (category) filter.category = category;
+
+//     const incomes = await Income.find(filter).sort({ date: -1 });
+
+//     res.json({ success: true, incomes });
+
+//   } catch (err) {
+//     console.error("Error fetching incomes:", err);
+//     res.status(500).json({ success: false, error: "Server error" });
+//   }
+// };
+
+
+// Get All Incomes (with filters)
 const getIncomes = async (req, res) => {
   try {
-    const { month, year, type, category } = req.query;
+    const { month, year, type, category, startDate, endDate } = req.query;
 
     let filter = {};
 
-    if (month && year) {
+    // Custom date range
+    if (startDate && endDate) {
+      filter.date = {
+        $gte: new Date(startDate),
+        $lte: new Date(endDate + "T23:59:59"),
+      };
+    } 
+    // Month + Year range
+    else if (month && year) {
       const start = new Date(year, month - 1, 1);
       const end = new Date(year, month, 0, 23, 59, 59);
       filter.date = { $gte: start, $lte: end };
@@ -587,13 +622,47 @@ const getIncomes = async (req, res) => {
 };
 
 // Get All Expenses (with filters)
+// const getExpenses = async (req, res) => {
+//   try {
+//     const { month, year, type, category } = req.query;
+
+//     let filter = {};
+
+//     if (month && year) {
+//       const start = new Date(year, month - 1, 1);
+//       const end = new Date(year, month, 0, 23, 59, 59);
+//       filter.date = { $gte: start, $lte: end };
+//     }
+
+//     if (type) filter.type = type;
+//     if (category) filter.category = category;
+
+//     const expenses = await Expense.find(filter).sort({ date: -1 });
+
+//     res.json({ success: true, expenses });
+
+//   } catch (err) {
+//     console.error("Error fetching expenses:", err);
+//     res.status(500).json({ success: false, error: "Server error" });
+//   }
+// };
+
+// Get All Expenses (with filters)
 const getExpenses = async (req, res) => {
   try {
-    const { month, year, type, category } = req.query;
+    const { month, year, type, category, startDate, endDate } = req.query;
 
     let filter = {};
 
-    if (month && year) {
+    // Custom date range
+    if (startDate && endDate) {
+      filter.date = {
+        $gte: new Date(startDate),
+        $lte: new Date(endDate + "T23:59:59"),
+      };
+    } 
+    // Month + Year range
+    else if (month && year) {
       const start = new Date(year, month - 1, 1);
       const end = new Date(year, month, 0, 23, 59, 59);
       filter.date = { $gte: start, $lte: end };
