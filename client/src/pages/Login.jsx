@@ -7,6 +7,8 @@ const Login = ({ setRole }) => {
   const [form, setForm] = useState({ email: "", password: "" });
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -65,7 +67,7 @@ const Login = ({ setRole }) => {
             className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-blue-500"
             required
           />
-          <input
+         {/*} <input
             type="password"
             name="password"
             placeholder="Password"
@@ -73,7 +75,27 @@ const Login = ({ setRole }) => {
             onChange={handleChange}
             className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-blue-500"
             required
-          />
+          />*/}
+
+          <div className="relative">
+  <input
+    type={showPassword ? "text" : "password"}
+    name="password"
+    placeholder="Password"
+    value={form.password}
+    onChange={handleChange}
+    className="w-full border border-gray-300 rounded-lg p-3 pr-10 focus:ring-2 focus:ring-green-500"
+    required
+  />
+
+  <span
+    onClick={() => setShowPassword(!showPassword)}
+    className="absolute right-3 top-3 cursor-pointer text-gray-500"
+  >
+    {showPassword ? "👁️" : "👁️‍🗨️"}
+  </span>
+</div>
+
 
           <button
             type="submit"

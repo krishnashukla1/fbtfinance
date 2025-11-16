@@ -274,7 +274,9 @@ const deleteExpense = async (req, res) => {
 const downloadFinanceExcel = async (req, res) => {
   try {
     const { month, year, startDate, endDate, currency = 'INR' } = req.query;
-    let filter = { user: req.user.id };
+    // let filter = { user: req.user.id };
+
+     let filter = {};  // remove user filter, show all data
 
     // Apply date filtering
     if (startDate && endDate) {
